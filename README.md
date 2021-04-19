@@ -1,2 +1,2 @@
-# template-typescript
-Template repository for GitHub typescript actions
+# read-property
+Read a property from Java properties file
