@@ -63,7 +63,7 @@ async function run() {
             }
             else {
                 core.info(`${property} = ${defaultValue} (default value)`);
-                core.setOutput('result', defaultValue);
+                core.setOutput('value', defaultValue);
                 return;
             }
         }
@@ -75,12 +75,12 @@ async function run() {
             }
             else {
                 core.info(`${property} = ${defaultValue} (default value)`);
-                core.setOutput('result', defaultValue);
+                core.setOutput('value', defaultValue);
                 return;
             }
         }
         core.info(`${property} = ${value}`);
-        core.setOutput('result', value);
+        core.setOutput('value', value);
     }
     catch (error) {
         core.setFailed(error);
