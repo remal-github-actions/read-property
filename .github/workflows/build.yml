@@ -54,9 +54,22 @@ jobs:
 
 
     - name: Run current action
+      id: current
       uses: ./
       with:
-        githubToken: ${{ secrets.PUSH_BACK_TOKEN }}
+        file: test/test.properties
+        property: test
+
+    - name: Validate current action
+      env:
+        OUTPUT: ${{ steps.current.outputs.result }}
+      run: |
+        if [ "$OUTPUT" == "А\nБВ" ]; then
+          echo "Valid"
+        else
+          echo "::error Invalid value returned: $OUTPUT"
+          exit 1
+        fi
 
 
     - name: Push back
