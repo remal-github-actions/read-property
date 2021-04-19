@@ -62,7 +62,7 @@ jobs:
 
     - name: Validate current action
       env:
-        OUTPUT: ${{ steps.current.outputs.result }}
+        OUTPUT: ${{ steps.current.outputs.value }}
       run: |
         if [ "$OUTPUT" == "АБВ" ]; then
           echo "Valid"

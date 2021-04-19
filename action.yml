@@ -21,7 +21,7 @@ inputs:
     description: Default value that will be returned if the property can't be read
 
 outputs:
-  result:
+  value:
     description: Property value
 
 runs:
