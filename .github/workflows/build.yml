@@ -64,7 +64,7 @@ jobs:
       env:
         OUTPUT: ${{ steps.current.outputs.result }}
       run: |
-        if [ "$OUTPUT" == "А\nБВ" ]; then
+        if [ "$OUTPUT" == "АБВ" ]; then
           echo "Valid"
         else
           echo "::error Invalid value returned: $OUTPUT"
