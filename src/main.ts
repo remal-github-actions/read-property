@@ -19,6 +19,7 @@ async function run(): Promise<void> {
             if (failIfFileNotFound) {
                 throw new Error(`Properties file can't be found: ${absoluteFile}`)
             } else {
+                core.info(`${property} = ${defaultValue} (default value)`)
                 core.setOutput('result', defaultValue)
                 return
             }
@@ -30,11 +31,13 @@ async function run(): Promise<void> {
             if (failIfPropertyNotFound) {
                 throw new Error(`Property '${property}' can't be found in properties file: ${absoluteFile}`)
             } else {
+                core.info(`${property} = ${defaultValue} (default value)`)
                 core.setOutput('result', defaultValue)
                 return
             }
         }
 
+        core.info(`${property} = ${value}`)
         core.setOutput('result', value)
 
     } catch (error) {
