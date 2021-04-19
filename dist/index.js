@@ -2,6 +2,21 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 948:
+/***/ (function(module, __unused_webpack_exports, __nccwpck_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+const path_1 = __importDefault(__nccwpck_require__(622));
+let workspacePath = process.env['GITHUB_WORKSPACE'] || process.cwd();
+workspacePath = path_1.default.resolve(workspacePath);
+module.exports = workspacePath;
+
+
+/***/ }),
+
 /***/ 538:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -25,11 +40,44 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
+const fs = __importStar(__nccwpck_require__(747));
+const javaProps = __importStar(__nccwpck_require__(814));
+const path_1 = __importDefault(__nccwpck_require__(622));
+const workspacePath_1 = __importDefault(__nccwpck_require__(948));
 async function run() {
     try {
-        core.info('action logic');
+        const file = core.getInput('file', { required: true });
+        const failIfFileNotFound = core.getInput('failIfFileNotFound').toLowerCase() === 'true';
+        const property = core.getInput('property', { required: true });
+        const failIfPropertyNotFound = core.getInput('failIfFileNotFound').toLowerCase() === 'true';
+        const defaultValue = core.getInput('defaultValue');
+        const absoluteFile = path_1.default.resolve(workspacePath_1.default, file);
+        if (!fs.existsSync(absoluteFile)) {
+            if (failIfFileNotFound) {
+                throw new Error(`Properties file can't be found: ${absoluteFile}`);
+            }
+            else {
+                core.setOutput('result', defaultValue);
+                return;
+            }
+        }
+        const properties = await javaProps.parseFile(absoluteFile);
+        const value = properties[property];
+        if (value == null) {
+            if (failIfPropertyNotFound) {
+                throw new Error(`Property '${property}' can't be found in properties file: ${absoluteFile}`);
+            }
+            else {
+                core.setOutput('result', defaultValue);
+                return;
+            }
+        }
+        core.setOutput('result', value);
     }
     catch (error) {
         core.setFailed(error);
@@ -426,6 +474,283 @@ function toCommandValue(input) {
     return JSON.stringify(input);
 }
 exports.toCommandValue = toCommandValue;
+//# sourceMappingURL=utils.js.map
+
+/***/ }),
+
+/***/ 63:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const utils_1 = __nccwpck_require__(176);
+function parse(str) {
+    const result = {};
+    const lr = new utils_1.LineReader(str);
+    let line;
+    while ((line = lr.readLine()) !== undefined) {
+        let keyLen = 0;
+        let valueStart = line.length;
+        let hasSep = false;
+        let backslash = false;
+        const lineLen = line.length;
+        let pos = 0;
+        for (; pos < lineLen; pos++) {
+            const c = line[pos];
+            if ((c === '=' || c === ':') && !backslash) {
+                valueStart = keyLen + 1;
+                hasSep = true;
+                break;
+            }
+            else if ((c === ' ' || c === '\t' || c === '\f') && !backslash) {
+                valueStart = keyLen + 1;
+                break;
+            }
+            if (c === '\\') {
+                backslash = !backslash;
+            }
+            else {
+                backslash = false;
+            }
+            keyLen++;
+        }
+        while (valueStart < lineLen) {
+            const c = line[valueStart];
+            if (c !== ' ' && c !== '\t' && c !== '\f') {
+                if (!hasSep && (c === '=' || c === ':')) {
+                    hasSep = true;
+                }
+                else {
+                    break;
+                }
+            }
+            valueStart++;
+        }
+        const key = utils_1.decodeLine(line.substring(0, keyLen));
+        const value = utils_1.decodeLine(line.substring(valueStart));
+        result[key] = value;
+    }
+    return result;
+}
+exports.parse = parse;
+function stringify(props) {
+    let str = '';
+    for (const key in props) {
+        if (Object.prototype.hasOwnProperty.call(props, key)) {
+            const value = props[key];
+            str += utils_1.encodeLine(key, true) + ': ' + utils_1.encodeLine(value) + '\n';
+        }
+    }
+    return str;
+}
+exports.stringify = stringify;
+exports.default = {
+    parse,
+    stringify,
+};
+//# sourceMappingURL=java-props.js.map
+
+/***/ }),
+
+/***/ 814:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const fs_1 = __importDefault(__nccwpck_require__(747));
+const java_props_1 = __nccwpck_require__(63);
+__export(__nccwpck_require__(63));
+function parseFile(path, encoding) {
+    return new Promise((resolve, reject) => {
+        fs_1.default.readFile(path, { encoding: encoding || 'utf8', flag: 'r' }, (err, data) => {
+            if (err) {
+                return reject(err);
+            }
+            try {
+                const res = java_props_1.parse(data);
+                return resolve(res);
+            }
+            catch (err) {
+                /* istanbul ignore next */
+                return reject(err);
+            }
+        });
+    });
+}
+exports.parseFile = parseFile;
+exports.default = {
+    parse: java_props_1.parse,
+    parseFile,
+    stringify: java_props_1.stringify,
+};
+//# sourceMappingURL=node-java-props.js.map
+
+/***/ }),
+
+/***/ 176:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const DECODE_PATTERN = /(?:\\u(.{0,4})|\\(.?))/g;
+const UNICODE_PATTERN = /^[0-9a-fA-F]{4}$/;
+const ENCODE_PATTERN = /(?:[\u0000-\u001F\\\u007F-\uFFFF])/g;
+const ENCODE_KEY_PATTERN = /(?:[\u0000-\u0020!#:=\\\u007F-\uFFFF])/g; // ENCODE_PATTERN with separators + comments
+function decodeLine(line) {
+    return line.replace(DECODE_PATTERN, (_, unicode, char) => {
+        if (unicode !== undefined) {
+            if (!unicode.match(UNICODE_PATTERN)) {
+                throw new Error('Malformed \\uxxxx encoding.');
+            }
+            const charVal = parseInt(unicode, 16);
+            return String.fromCharCode(charVal);
+        }
+        else if (char === 't') {
+            return '\t';
+        }
+        else if (char === 'r') {
+            return '\r';
+        }
+        else if (char === 'n') {
+            return '\n';
+        }
+        else if (char === 'f') {
+            return '\f';
+        }
+        else {
+            return char;
+        }
+    });
+}
+exports.decodeLine = decodeLine;
+function encodeLine(line, isKey) {
+    let str = line.replace(isKey ? ENCODE_KEY_PATTERN : ENCODE_PATTERN, (c) => {
+        if (c === '\t') {
+            return '\\t';
+        }
+        else if (c === '\r') {
+            return '\\r';
+        }
+        else if (c === '\n') {
+            return '\\n';
+        }
+        else if (c === '\f') {
+            return '\\f';
+        }
+        else if (c >= ' ' && c <= '~') {
+            return '\\' + c;
+        }
+        else {
+            const code = c.charCodeAt(0);
+            if (code < 16)
+                return '\\u000' + code.toString(16).toUpperCase();
+            if (code < 256)
+                return '\\u00' + code.toString(16).toUpperCase();
+            if (code < 4096)
+                return '\\u0' + code.toString(16).toUpperCase();
+            return '\\u' + code.toString(16).toUpperCase();
+        }
+    });
+    if (!isKey) {
+        const c = str.charAt(0);
+        if (c === ' ' || c === '\t' || c === '\f') {
+            str = '\\' + str;
+        }
+    }
+    return str;
+}
+exports.encodeLine = encodeLine;
+/**
+ * @deprecated Use {@link #decodeLine}.
+ */
+exports.convertLine = decodeLine;
+class LineReader {
+    constructor(str) {
+        this.pos = 0;
+        this.str = str;
+        this.strLen = str.length;
+    }
+    readLine() {
+        let skipWhiteSpace = true;
+        let commentLine = false;
+        let newLine = true;
+        let appendedLineBegin = false;
+        let backslash = false;
+        let skipLF = false;
+        let line = '';
+        while (this.pos < this.strLen) {
+            const c = this.str[this.pos++];
+            if (skipLF) {
+                skipLF = false;
+                if (c === '\n') {
+                    continue;
+                }
+            }
+            if (skipWhiteSpace) {
+                if (c === ' ' || c === '\t' || c === '\f') {
+                    continue;
+                }
+                if (!appendedLineBegin && (c === '\r' || c === '\n')) {
+                    continue;
+                }
+                skipWhiteSpace = false;
+                appendedLineBegin = false;
+            }
+            if (newLine) {
+                newLine = false;
+                if (c === '#' || c === '!') {
+                    commentLine = true;
+                    continue;
+                }
+            }
+            if (c !== '\n' && c !== '\r') {
+                line += c;
+                if (c === '\\') {
+                    backslash = !backslash;
+                }
+                else {
+                    backslash = false;
+                }
+            }
+            else {
+                // reached EOL
+                if (commentLine || line === '') {
+                    commentLine = false;
+                    newLine = true;
+                    skipWhiteSpace = true;
+                    line = '';
+                    continue;
+                }
+                if (backslash) {
+                    line = line.substring(0, line.length - 1);
+                    skipWhiteSpace = true;
+                    appendedLineBegin = true;
+                    backslash = false;
+                    if (c === '\r') {
+                        skipLF = true;
+                    }
+                }
+                else {
+                    return line;
+                }
+            }
+        }
+        if (backslash) {
+            line = line.substring(0, line.length - 1);
+        }
+        if (line === '' || commentLine) {
+            return undefined;
+        }
+        return line;
+    }
+}
+exports.LineReader = LineReader;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),
