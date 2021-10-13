@@ -2436,10 +2436,10 @@ istanbul-reports@^3.0.2:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
 
-java-props@2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/java-props/-/java-props-2.1.3.tgz#8f796a0e4949d86738651206c4eab49081bf5ec4"
-  integrity sha512-S9OR6qBHmbTEuhfTq5pf5WhVjLPFSaOmVbYnpaEbdoPEk9l6dJQipthx/SFk1oAEdZy2zlqNVFKg+wvKr24wtA==
+java-props@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/java-props/-/java-props-2.2.0.tgz#4fa145d81f384682560d12e64505a4e6074214a7"
+  integrity sha512-KV2K6BmuF8amyiLX8NUUXIZiiTlf1xYDv7vJ7TKk/002rdOjj57dhYrEp7OpMQTf+nARgMr/FP/ivr/hmlDTaA==
 
 jest-changed-files@^27.2.5:
   version "27.2.5"
