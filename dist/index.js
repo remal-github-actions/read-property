@@ -1372,9 +1372,22 @@ exports.checkBypass = checkBypass;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.stringify = exports.parse = void 0;
 const utils_1 = __nccwpck_require__(176);
+/**
+ * Parses a .properties string and returns the result as an object.
+ *
+ * @param str The string to parse as .properties
+ * @return The result as an object
+ *
+ * @example ```javascript
+ * const props = javaProps.parse('foo=Hello\nbar=World');
+ * console.log(props.foo + ' ' + props.bar);
+ * // "Hello World"
+ * ```
+ */
 function parse(str) {
-    const result = {};
+    const result = Object.create(null);
     const lr = new utils_1.LineReader(str);
     let line;
     while ((line = lr.readLine()) !== undefined) {
@@ -1422,6 +1435,18 @@ function parse(str) {
     return result;
 }
 exports.parse = parse;
+/**
+ * Converts a JavaScript object (associating keys to string values) to a .properties string.
+ *
+ * @param props The JavaScript object to convert
+ * @return The .properties string corresponding to the given JavaScript object
+ *
+ * @example ```javascript
+ * const str = javaProps.stringify({'foo': 'Hello', 'bar': 'World'});
+ * console.log(str);
+ * // "foo: Hello\nbar: World\n"
+ * ```
+ */
 function stringify(props) {
     let str = '';
     for (const key in props) {
@@ -1433,6 +1458,9 @@ function stringify(props) {
     return str;
 }
 exports.stringify = stringify;
+/**
+ * @deprecated
+ */
 exports.default = {
     parse,
     stringify,
@@ -1446,16 +1474,52 @@ exports.default = {
 
 "use strict";
 
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.parseFile = void 0;
 const fs_1 = __importDefault(__nccwpck_require__(747));
 const java_props_1 = __nccwpck_require__(63);
-__export(__nccwpck_require__(63));
+__exportStar(__nccwpck_require__(63), exports);
+/**
+ * Parses a .properties file and returns the result as an object.
+ *
+ * @param path Filename or file descriptor
+ * @param encoding File encoding (default: utf8)
+ * @return The result as an object
+ *
+ * @example ```javascript
+ * javaProps.parseFile('./foobar.properties').then((props) => {
+ *     console.log(props.foo + ' ' + props.bar);
+ *     // "Hello World"
+ * }).catch((err) => {
+ *     console.error(err);
+ * });
+ * ```
+ * *- or with async/await -*
+ * ```javascript
+ * async function fct() {
+ *     try {
+ *         const props = await javaProps.parseFile('./foobar.properties');
+ *         console.log(props.foo + ' ' + props.bar);
+ *         // "Hello World"
+ *     } catch (err) {
+ *         console.error(err);
+ *     }
+ * }
+ * ```
+ */
 function parseFile(path, encoding) {
     return new Promise((resolve, reject) => {
         fs_1.default.readFile(path, { encoding: encoding || 'utf8', flag: 'r' }, (err, data) => {
@@ -1474,6 +1538,9 @@ function parseFile(path, encoding) {
     });
 }
 exports.parseFile = parseFile;
+/**
+ * @deprecated
+ */
 exports.default = {
     parse: java_props_1.parse,
     parseFile,
@@ -1489,6 +1556,7 @@ exports.default = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.LineReader = exports.convertLine = exports.encodeLine = exports.decodeLine = void 0;
 const DECODE_PATTERN = /(?:\\u(.{0,4})|\\(.?))/g;
 const UNICODE_PATTERN = /^[0-9a-fA-F]{4}$/;
 const ENCODE_PATTERN = /(?:[\u0000-\u001F\\\u007F-\uFFFF])/g;
