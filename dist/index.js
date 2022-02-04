@@ -1388,50 +1388,10 @@ const utils_1 = __nccwpck_require__(176);
  */
 function parse(str) {
     const result = Object.create(null);
-    const lr = new utils_1.LineReader(str);
-    let line;
-    while ((line = lr.readLine()) !== undefined) {
-        let keyLen = 0;
-        let valueStart = line.length;
-        let hasSep = false;
-        let backslash = false;
-        const lineLen = line.length;
-        let pos = 0;
-        for (; pos < lineLen; pos++) {
-            const c = line[pos];
-            if ((c === '=' || c === ':') && !backslash) {
-                valueStart = keyLen + 1;
-                hasSep = true;
-                break;
-            }
-            else if ((c === ' ' || c === '\t' || c === '\f') && !backslash) {
-                valueStart = keyLen + 1;
-                break;
-            }
-            if (c === '\\') {
-                backslash = !backslash;
-            }
-            else {
-                backslash = false;
-            }
-            keyLen++;
-        }
-        while (valueStart < lineLen) {
-            const c = line[valueStart];
-            if (c !== ' ' && c !== '\t' && c !== '\f') {
-                if (!hasSep && (c === '=' || c === ':')) {
-                    hasSep = true;
-                }
-                else {
-                    break;
-                }
-            }
-            valueStart++;
-        }
-        const key = utils_1.decodeLine(line.substring(0, keyLen));
-        const value = utils_1.decodeLine(line.substring(valueStart));
-        result[key] = value;
-    }
+    utils_1.rawParse(str, (res) => {
+        const key = utils_1.decodeLine(res.line.substring(0, res.sepStart));
+        result[key] = utils_1.decodeLine(res.line.substring(res.valueStart));
+    });
     return result;
 }
 exports.parse = parse;
@@ -1556,11 +1516,60 @@ exports["default"] = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.LineReader = exports.convertLine = exports.encodeLine = exports.decodeLine = void 0;
+exports.LineReader = exports.convertLine = exports.encodeLine = exports.decodeLine = exports.rawParseLine = exports.rawParse = void 0;
 const DECODE_PATTERN = /(?:\\u(.{0,4})|\\(.?))/g;
 const UNICODE_PATTERN = /^[0-9a-fA-F]{4}$/;
 const ENCODE_PATTERN = /(?:[\u0000-\u001F\\\u007F-\uFFFF])/g;
 const ENCODE_KEY_PATTERN = /(?:[\u0000-\u0020!#:=\\\u007F-\uFFFF])/g; // ENCODE_PATTERN with separators + comments
+function rawParse(str, consumeFn) {
+    const lr = new LineReader(str);
+    let line;
+    while ((line = lr.readLine()) !== undefined) {
+        consumeFn(rawParseLine(line));
+    }
+}
+exports.rawParse = rawParse;
+function rawParseLine(line) {
+    let keyLen = 0;
+    let valueStart = line.length;
+    let hasSep = false;
+    let backslash = false;
+    const lineLen = line.length;
+    let pos = 0;
+    for (; pos < lineLen; pos++) {
+        const c = line[pos];
+        if ((c === '=' || c === ':') && !backslash) {
+            valueStart = keyLen + 1;
+            hasSep = true;
+            break;
+        }
+        else if ((c === ' ' || c === '\t' || c === '\f') && !backslash) {
+            valueStart = keyLen + 1;
+            break;
+        }
+        if (c === '\\') {
+            backslash = !backslash;
+        }
+        else {
+            backslash = false;
+        }
+        keyLen++;
+    }
+    while (valueStart < lineLen) {
+        const c = line[valueStart];
+        if (c !== ' ' && c !== '\t' && c !== '\f') {
+            if (!hasSep && (c === '=' || c === ':')) {
+                hasSep = true;
+            }
+            else {
+                break;
+            }
+        }
+        valueStart++;
+    }
+    return { line, sepStart: keyLen, valueStart };
+}
+exports.rawParseLine = rawParseLine;
 function decodeLine(line) {
     return line.replace(DECODE_PATTERN, (_, unicode, char) => {
         if (unicode !== undefined) {
