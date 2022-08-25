@@ -41,7 +41,7 @@ async function run(): Promise<void> {
         core.setOutput('value', value)
 
     } catch (error) {
-        core.setFailed(error)
+        core.setFailed(error instanceof Error ? error : (error as object).toString())
     }
 }
 
