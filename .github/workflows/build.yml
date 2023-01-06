@@ -84,7 +84,6 @@ jobs:
 
     # $$$sync-with-template-modifiable: validation $$$
 
-
     - name: Run current action
       id: current
       uses: ./
@@ -102,7 +101,6 @@ jobs:
           echo "::error Invalid value returned: $OUTPUT"
           exit 1
         fi
-
 
     # $$$sync-with-template-modifiable-end$$$
 
