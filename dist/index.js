@@ -1,106 +1,9 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
-
-/***/ 111:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const path_1 = __importDefault(__nccwpck_require__(928));
-const workspacePath = path_1.default.resolve(process.env.GITHUB_WORKSPACE ?? process.cwd());
-exports["default"] = workspacePath;
-
-
-/***/ }),
-
-/***/ 666:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(484));
-const fs = __importStar(__nccwpck_require__(896));
-const javaProps = __importStar(__nccwpck_require__(520));
-const path_1 = __importDefault(__nccwpck_require__(928));
-const workspacePath_1 = __importDefault(__nccwpck_require__(111));
-async function run() {
-    try {
-        const file = core.getInput('file', { required: true });
-        const failIfFileNotFound = core.getInput('failIfFileNotFound').toLowerCase() === 'true';
-        const property = core.getInput('property', { required: true });
-        const failIfPropertyNotFound = core.getInput('failIfFileNotFound').toLowerCase() === 'true';
-        const defaultValue = core.getInput('defaultValue');
-        const absoluteFile = path_1.default.resolve(workspacePath_1.default, file);
-        if (!fs.existsSync(absoluteFile)) {
-            if (failIfFileNotFound) {
-                throw new Error(`Properties file can't be found: ${absoluteFile}`);
-            }
-            else {
-                core.info(`${property} = ${defaultValue} (default value)`);
-                core.setOutput('value', defaultValue);
-                return;
-            }
-        }
-        const properties = await javaProps.parseFile(absoluteFile);
-        const value = properties[property];
-        if (value == null) {
-            if (failIfPropertyNotFound) {
-                throw new Error(`Property '${property}' can't be found in properties file: ${absoluteFile}`);
-            }
-            else {
-                core.info(`${property} = ${defaultValue} (default value)`);
-                core.setOutput('value', defaultValue);
-                return;
-            }
-        }
-        core.info(`${property} = ${value}`);
-        core.setOutput('value', value);
-    }
-    catch (error) {
-        core.setFailed(error instanceof Error ? error : error.toString());
-        throw error;
-    }
-}
-run();
-
-
-/***/ }),
+import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
+/******/ var __webpack_modules__ = ({
 
 /***/ 914:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -203,7 +106,6 @@ function escapeProperty(s) {
 /***/ 484:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -554,7 +456,6 @@ exports.platform = __importStar(__nccwpck_require__(968));
 /***/ 753:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 // For internal use, subject to change.
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
@@ -622,7 +523,6 @@ exports.prepareKeyValueMessage = prepareKeyValueMessage;
 /***/ 306:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -706,7 +606,6 @@ exports.OidcClient = OidcClient;
 /***/ 976:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -775,7 +674,6 @@ exports.toPlatformPath = toPlatformPath;
 /***/ 968:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -876,7 +774,6 @@ exports.getDetails = getDetails;
 /***/ 847:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -1166,7 +1063,6 @@ exports.summary = _summary;
 /***/ 302:
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -1213,7 +1109,6 @@ exports.toCommandProperties = toCommandProperties;
 /***/ 236:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -1323,7 +1218,6 @@ exports.getExecOutput = getExecOutput;
 /***/ 665:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -1948,7 +1842,6 @@ class ExecState extends events.EventEmitter {
 /***/ 552:
 /***/ (function(__unused_webpack_module, exports) {
 
-"use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -2036,7 +1929,6 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 /***/ 844:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
@@ -2648,7 +2540,6 @@ const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCa
 /***/ 988:
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.checkBypass = exports.getProxyUrl = void 0;
@@ -2716,7 +2607,6 @@ exports.checkBypass = checkBypass;
 /***/ 207:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -2906,7 +2796,6 @@ exports.getCmdPath = getCmdPath;
 /***/ 994:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -3212,7 +3101,6 @@ function copyFile(srcFile, destFile, force) {
 /***/ 601:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.stringify = exports.parse = void 0;
@@ -3275,7 +3163,6 @@ exports["default"] = {
 /***/ 520:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -3356,7 +3243,6 @@ exports["default"] = {
 /***/ 769:
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LineReader = exports.convertLine = exports.encodeLine = exports.decodeLine = exports.rawParseLine = exports.rawParse = void 0;
@@ -3577,7 +3463,6 @@ module.exports = __nccwpck_require__(218);
 /***/ 218:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 var net = __nccwpck_require__(278);
@@ -3849,7 +3734,6 @@ exports.debug = debug; // for test
 /***/ 613:
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("assert");
 
 /***/ }),
@@ -3857,15 +3741,13 @@ module.exports = require("assert");
 /***/ 317:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("child_process");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("child_process");
 
 /***/ }),
 
 /***/ 434:
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("events");
 
 /***/ }),
@@ -3873,7 +3755,6 @@ module.exports = require("events");
 /***/ 896:
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("fs");
 
 /***/ }),
@@ -3881,7 +3762,6 @@ module.exports = require("fs");
 /***/ 611:
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("http");
 
 /***/ }),
@@ -3889,7 +3769,6 @@ module.exports = require("http");
 /***/ 692:
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("https");
 
 /***/ }),
@@ -3897,7 +3776,6 @@ module.exports = require("https");
 /***/ 278:
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("net");
 
 /***/ }),
@@ -3905,7 +3783,6 @@ module.exports = require("net");
 /***/ 857:
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("os");
 
 /***/ }),
@@ -3913,7 +3790,6 @@ module.exports = require("os");
 /***/ 928:
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("path");
 
 /***/ }),
@@ -3921,23 +3797,20 @@ module.exports = require("path");
 /***/ 193:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("string_decoder");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("string_decoder");
 
 /***/ }),
 
 /***/ 557:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("timers");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("timers");
 
 /***/ }),
 
 /***/ 756:
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("tls");
 
 /***/ }),
@@ -3945,55 +3818,106 @@ module.exports = require("tls");
 /***/ 23:
 /***/ ((module) => {
 
-"use strict";
 module.exports = require("util");
 
 /***/ })
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __nccwpck_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		var threw = true;
-/******/ 		try {
-/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
-/******/ 			threw = false;
-/******/ 		} finally {
-/******/ 			if(threw) delete __webpack_module_cache__[moduleId];
-/******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __nccwpck_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
 /******/ 	}
-/******/ 	
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	var threw = true;
+/******/ 	try {
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
+/******/ 		threw = false;
+/******/ 	} finally {
+/******/ 		if(threw) delete __webpack_module_cache__[moduleId];
+/******/ 	}
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat */
-/******/ 	
-/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
-/******/ 	
+/******/ /* webpack/runtime/compat */
+/******/ 
+/******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
+/******/ 
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(666);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
-/******/ })()
-;
+var __webpack_exports__ = {};
+
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(484);
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(896);
+// EXTERNAL MODULE: ./node_modules/java-props/dist/node-java-props.js
+var node_java_props = __nccwpck_require__(520);
+// EXTERNAL MODULE: external "path"
+var external_path_ = __nccwpck_require__(928);
+;// CONCATENATED MODULE: ./build/internal/workspacePath.js
+
+const workspacePath = external_path_.resolve(process.env.GITHUB_WORKSPACE ?? process.cwd());
+/* harmony default export */ const internal_workspacePath = (workspacePath);
+
+;// CONCATENATED MODULE: ./build/main.js
+
+
+
+
+
+async function run() {
+    try {
+        const file = core.getInput('file', { required: true });
+        const failIfFileNotFound = core.getInput('failIfFileNotFound').toLowerCase() === 'true';
+        const property = core.getInput('property', { required: true });
+        const failIfPropertyNotFound = core.getInput('failIfFileNotFound').toLowerCase() === 'true';
+        const defaultValue = core.getInput('defaultValue');
+        const absoluteFile = external_path_.resolve(internal_workspacePath, file);
+        if (!external_fs_.existsSync(absoluteFile)) {
+            if (failIfFileNotFound) {
+                throw new Error(`Properties file can't be found: ${absoluteFile}`);
+            }
+            else {
+                core.info(`${property} = ${defaultValue} (default value)`);
+                core.setOutput('value', defaultValue);
+                return;
+            }
+        }
+        const properties = await node_java_props.parseFile(absoluteFile);
+        const value = properties[property];
+        if (value == null) {
+            if (failIfPropertyNotFound) {
+                throw new Error(`Property '${property}' can't be found in properties file: ${absoluteFile}`);
+            }
+            else {
+                core.info(`${property} = ${defaultValue} (default value)`);
+                core.setOutput('value', defaultValue);
+                return;
+            }
+        }
+        core.info(`${property} = ${value}`);
+        core.setOutput('value', value);
+    }
+    catch (error) {
+        core.setFailed(error instanceof Error ? error : error.toString());
+        throw error;
+    }
+}
+run();
+

@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as fs from 'fs'
 import * as javaProps from 'java-props'
 import path from 'path'
-import workspacePath from './internal/workspacePath'
+import workspacePath from './internal/workspacePath.js'
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
