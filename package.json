@@ -20,7 +20,7 @@
     "java-props": "2.3.1"
   },
   "devDependencies": {
-    "@tsconfig/node22": "22.0.0",
+    "@tsconfig/node20": "1.0.0",
     "@types/jest": "30.0.0",
     "@types/node": "20.19.27",
     "@types/semver": "^7",
